@@ -1,0 +1,33 @@
+insert into "PTpesca_fabricante" (nome, nacionalidade, datanasc, datafal)
+values
+('Lorenzo Santana', 'Espanha', '10/06/1968', '11/08/2021'),
+('Kan Daiwa', 'Japão', '13/02/1948', null);
+
+
+insert into "PTpesca_pescador" (nome, nacionalidade, datanasc, datafal)
+values
+('Andre Couto', 'Portugal', '11/01/2001', null),
+('Diogo Santiago', 'Portugal', '17/08/2001', null);
+
+insert into "PTpesca_canadepesca" (fabricante_id, material, modelo, peso, tamanho)
+values
+((select id from "PTpesca_fabricante" where nome = 'Lorenzo Santana'), 'carbono', 'Bolonhesa', 382, 147),
+((select id from "PTpesca_fabricante" where nome = 'Kan Daiwa'), 'carbono preto', 'Akimi 420', 610, 420);
+
+insert into "PTpesca_imagem" (canadepesca_id, link)
+values
+((select c.id from "PTpesca_canadepesca" c, "PTpesca_fabricante" f  where  f.id = c.fabricante_id and c.modelo='Bolonhesa' and f.nome='Lorenzo Santana'), 'https://www.daiwa.pt/uploads/products/rods/2019/10/sev60bf_1200x2400.jpg'),
+((select c.id from "PTpesca_canadepesca" c, "PTpesca_fabricante" f  where  f.id = c.fabricante_id and c.modelo='Akimi 420' and f.nome='Kan Daiwa'), 'https://www.formulapesca.com/11296-large_default_2x/alister-special.jpg');
+
+insert into "PTpesca_pesca" (pescador_id, canadepesca_id, zona, tipo)
+values
+(
+	(select id from "PTpesca_pescador" where nome='Andre Couto'),
+	(select c.id from "PTpesca_canadepesca" c, "PTpesca_fabricante" f  where  f.id = c.fabricante_id and c.modelo='Akimi 420' and f.nome = 'Kan Daiwa'),
+	'Esposende','Costeira'
+),
+(
+	(select id from "PTpesca_pescador" where nome='Diogo Santiago'),
+	(select c.id from "PTpesca_canadepesca" c, "PTpesca_fabricante" f  where  f.id = c.fabricante_id and c.modelo='Bolonhesa' and f.nome = 'Lorenzo Santana'),
+	'Figueira da Foz','Em alto mar'
+);
